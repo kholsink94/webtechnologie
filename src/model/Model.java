@@ -26,4 +26,21 @@ public class Model {
     public ArrayList<Person> getPersons() {
         return persons;
     }
+
+    public void addPerson(String username, String password, String role){
+        if(role.equals("Owner")){
+            persons.add(new Owner(username, password));
+        } else{
+            persons.add(new Hirer(username, password));
+        }
+    }
+
+    public boolean doesPersonExist(String username){
+        for(int i = 0; i < persons.size(); i++){
+            if(persons.get(i).getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

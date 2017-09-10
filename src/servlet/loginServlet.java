@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 @WebServlet("/loginServlet")
 public class loginServlet extends HttpServlet {
@@ -25,19 +26,26 @@ public class loginServlet extends HttpServlet {
         PrintWriter writer = response.getWriter();
         String htmlRespone = "<html>";
 
-        for (int i = 0; i < model.persons.size(); i++) {
-            if (model.getPersons().get(i).getUsername().equals(tempUsername) && model.getPersons().get(i).getPassword().equals(tempPassword)) {
-                System.out.println("Succesvolle inlog TEST");
-                htmlRespone += "Welcome " + tempUsername + ", u succesfully logged in!" + "<br/>";
-            } else {
-                System.out.println("Niet succesvolle inlog TEST");
-                htmlRespone += "The username/password combination is incorrect, please try again!" + "<br/>";
-                // Hier moet hij redirecting naar een foutieve inlog pagina.html --> staat in opdrachtbeschrijving.
-            }
+        if(ValidateLogin(tempUsername, tempPassword)){
+            response.sendRedirect("home.html");
+        } else{
+            response.sendRedirect("failedLogin.html");
         }
 
         htmlRespone += "</html>";
         writer.println(htmlRespone);
+    }
+
+    private boolean ValidateLogin(String username, String password){
+        ArrayList<Person> users = model.getPersons();
+
+        for(int i = 0; i < users.size(); i++){
+            if(users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
