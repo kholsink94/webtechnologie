@@ -27,7 +27,11 @@ public class loginServlet extends HttpServlet {
         String htmlRespone = "<html>";
 
         if(ValidateLogin(tempUsername, tempPassword)){
-            response.sendRedirect("home.html");
+            if (model.isHirer(tempUsername)) {
+                response.sendRedirect("hirer.html");
+            }else if (!model.isHirer(tempUsername)){
+                response.sendRedirect("owner.html");
+            }
         } else{
             response.sendRedirect("failedLogin.html");
         }
