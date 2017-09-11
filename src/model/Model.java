@@ -1,6 +1,5 @@
 package model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Model {
@@ -28,14 +27,14 @@ public class Model {
     }
 
     private void generateDummyRooms(){
-        rooms.add(new Room(100, 220, "Ootmarsum"));
-        rooms.add(new Room(150, 280, "Ootmarsum"));
-        rooms.add(new Room(170, 300, "Ootmarsum"));
-        rooms.add(new Room(200, 350, "Ootmarsum"));
-        rooms.add(new Room(200, 350, "Ootmarsum"));
-        rooms.add(new Room(250, 370, "Ootmarsum"));
-        rooms.add(new Room(300, 500, "Ootmarsum"));
-        rooms.add(new Room(320, 550, "Ootmarsum"));
+        rooms.add(new Room(100, 220, "Ootmarsum", "Owner"));
+        rooms.add(new Room(150, 280, "Ootmarsum", "Owner"));
+        rooms.add(new Room(170, 300, "Ootmarsum", "Owner"));
+        rooms.add(new Room(200, 350, "Ootmarsum", "Owner"));
+        rooms.add(new Room(200, 350, "Ootmarsum", "Niet"));
+        rooms.add(new Room(250, 370, "Ootmarsum", "Niet"));
+        rooms.add(new Room(300, 500, "Ootmarsum", "Niet"));
+        rooms.add(new Room(320, 550, "Ootmarsum", "Niet"));
     }
 
     public boolean isHirer(String username) {
@@ -59,6 +58,20 @@ public class Model {
         } else {
             persons.add(new Hirer(username, password));
         }
+    }
+
+    public void addRoom(int squareMeters, int rentPrice, String location, String owner){
+        rooms.add(new Room(squareMeters, rentPrice, location, owner));
+    }
+
+    public ArrayList<Room> getSpecificRooms(String owner){
+        ArrayList<Room>specificRooms = new ArrayList<>();
+        for (int i = 0; i <rooms.size() ; i++) {
+            if (rooms.get(i).getOwner().equals(owner)){
+                specificRooms.add(rooms.get(i));
+            }
+        }
+        return specificRooms;
     }
 
     public boolean doesPersonExist(String username) {

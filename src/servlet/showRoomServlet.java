@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-@WebServlet("/searchRoomServlet")
-public class searchRoomServlet extends HttpServlet {
+@WebServlet("/showRoomServlet")
+public class showRoomServlet extends HttpServlet {
 
     private Model model = Model.getInstance();
     private ArrayList<Room> specificRooms = new ArrayList<>();
@@ -23,22 +23,17 @@ public class searchRoomServlet extends HttpServlet {
         int rentPrice = Integer.parseInt(request.getParameter("rentPrice"));
         String location = request.getParameter("location");
 
+        // Die ownernaam moeten we op een of andere manier in een sessie opslaan om hier te gebruiken. Heb nu maar even owner gebruikt.
+        model.addRoom(squareMeters, rentPrice, location, "Owner");
+
         PrintWriter writer = response.getWriter();
         String htmlResponse = "<html>";
 
-        specificRooms = model.getSpecificRooms(squareMeters, rentPrice, location);
-        htmlResponse += "We found " + specificRooms.size() + " room(s) with the following requirements: " + "<br/>" + "<br/>";
-        htmlResponse += "At least " + squareMeters + " square meters" + "<br/>";
-        htmlResponse += "Below " + rentPrice + " euro" + "<br/>";
-        htmlResponse += "In " + location + "<br/>" + "<br/>";
-
-        for (int i = 0; i <specificRooms.size() ; i++) {
-            htmlResponse += "Square meters: " + specificRooms.get(i).getSquareMeters() + ", Rent price: " + specificRooms.get(i).getRentPrice() + ", Location: " + specificRooms.get(i).getLocation();
-            htmlResponse += "<br/>";
-        }
+        htmlResponse += "Room added: " + squareMeters + " Square meters, " + rentPrice + " Rent price " + "in " + location;
 
         htmlResponse += "</html>";
         writer.println(htmlResponse);
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

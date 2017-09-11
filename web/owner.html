@@ -1,9 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <h2>Succesfully logged in as, owner!</h2>
 </head>
+
 <body>
-    <p1>Hier komt de owner!</p1>
+<form name="form" method="post" action="showRoomServlet">
+
+    <div class="container">
+        <label><b>Square meters</b></label>
+        <input name="squareMeters" type="text" placeholder="Enter square meters" required>
+
+        <br>
+
+        <label><b>Rent price</b></label>
+        <input name="rentPrice" type="text" placeholder="Enter rent price" required>
+
+        <br>
+
+        <label><b>Location</b></label>
+        <input name="location" type="text" placeholder="Enter location" required>
+
+        <br>
+
+        <button type="search">Add room</button>
+    </div>
+
+    <div class="container">
+
+    </div>
+</form>
 </body>
 </html>
