@@ -60,6 +60,15 @@ public class Model {
         }
     }
 
+    public Person getPerson(String username){
+        for(int i = 0; i < persons.size(); i++){
+            if(persons.get(i).getUsername().equals(username)){
+                return persons.get(i);
+            }
+        }
+        return null;
+    }
+
     public void addRoom(int squareMeters, int rentPrice, String location, String owner){
         rooms.add(new Room(squareMeters, rentPrice, location, owner));
     }
