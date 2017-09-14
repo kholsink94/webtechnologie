@@ -1,10 +1,8 @@
 package servlet;
 
-import model.Hirer;
-import model.Model;
-import model.Owner;
-import model.Person;
+import model.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +18,7 @@ public class loginServlet extends HttpServlet {
 
     private String tempUsername, tempPassword;
     private Model model = Model.getInstance();
+    private ArrayList<Room> specificRooms;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -27,37 +26,54 @@ public class loginServlet extends HttpServlet {
         tempUsername = request.getParameter("username");
         tempPassword = request.getParameter("password");
 
-        PrintWriter writer = response.getWriter();
-        String htmlRespone = "<html>";
 
-        if(ValidateLogin(tempUsername, tempPassword)){
+        if (ValidateLogin(tempUsername, tempPassword)) {
             if (model.isHirer(tempUsername)) {
-                Person currentUser = (Person)session.getAttribute("person");
+                Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
                     currentUser = new Owner(tempUsername, tempPassword);
                     session.setAttribute("person", currentUser);
                 }
-                response.sendRedirect("hirer.html");
-            }else if (!model.isHirer(tempUsername)){
-                Person currentUser = (Person)session.getAttribute("person");
+                RequestDispatcher dispatch = request.getRequestDispatcher("WEB-INF/hirer.html");
+                dispatch.forward(request, response);
+            } else if (!model.isHirer(tempUsername)) {
+                Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
                     currentUser = new Hirer(tempUsername, tempPassword);
                     session.setAttribute("person", currentUser);
                 }
-                response.sendRedirect("owner.html");
+                specificRooms = model.getSpecificRooms(tempUsername);
+                printOwnerDetails(response.getWriter());
             }
-        } else{
-            response.sendRedirect("failedLogin.html");
+        } else {
+            response.sendRedirect("failedlogin.html");
         }
-        htmlRespone += "</html>";
-        writer.println(htmlRespone);
     }
 
-    private boolean ValidateLogin(String username, String password){
+    private void printOwnerDetails(PrintWriter writer) {
+        writer.println("<head>\n" +
+                "    <h2>Succesfully logged in as, owner!</h2>\n" +
+                "</head>" + "<br/>");
+        writer.println("You have; " + specificRooms.size() + " rooms!");
+        writer.println("<br/>" + "<br/>");
+        for (int i = 0; i < specificRooms.size(); i++) {
+            writer.println("Room: " + specificRooms.get(i).getSquareMeters() + " Square meters for " + specificRooms.get(i).getRentPrice() + " rentprice in " + specificRooms.get(i).getLocation());
+            writer.println("<br/>" + "<br/>");
+        }
+        writer.println("<form action=\"/addroom.html\">\n" +
+                "    <button type=\"sumbit\">Add room</button>\n" +
+                "</form>");
+        writer.println("    <form name=\"form\" method=\"post\" action=\"showPersonServlet\">\n" +
+                "        <button type=\"search\">Show Persons</button>\n" +
+                "    </form>");
+
+    }
+
+    private boolean ValidateLogin(String username, String password) {
         ArrayList<Person> users = model.getPersons();
 
-        for(int i = 0; i < users.size(); i++){
-            if(users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)){
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
                 return true;
             }
         }

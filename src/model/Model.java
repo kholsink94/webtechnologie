@@ -31,14 +31,14 @@ public class Model {
     }
 
     private void generateDummyRooms() {
-        rooms.add(new Room(100, 220, "Ootmarsum", "Owner"));
-        rooms.add(new Room(150, 280, "Ootmarsum", "Owner"));
-        rooms.add(new Room(170, 300, "Ootmarsum", "Owner"));
-        rooms.add(new Room(200, 350, "Ootmarsum", "Owner"));
-        rooms.add(new Room(200, 350, "Ootmarsum", "Niet"));
-        rooms.add(new Room(250, 370, "Ootmarsum", "Niet"));
-        rooms.add(new Room(300, 500, "Ootmarsum", "Niet"));
-        rooms.add(new Room(320, 550, "Ootmarsum", "Niet"));
+        rooms.add(new Room(10, 220, "Ootmarsum", "Hans"));
+        rooms.add(new Room(15, 280, "Ootmarsum", "Hans"));
+        rooms.add(new Room(17, 300, "Ootmarsum", "Owner"));
+        rooms.add(new Room(20, 350, "Ootmarsum", "Owner"));
+        rooms.add(new Room(20, 350, "Ootmarsum", "Niet"));
+        rooms.add(new Room(25, 370, "Ootmarsum", "Jochem"));
+        rooms.add(new Room(30, 500, "Ootmarsum", "Brend"));
+        rooms.add(new Room(32, 550, "Ootmarsum", "Niet"));
     }
 
     public boolean isHirer(String username) {
