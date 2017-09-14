@@ -24,9 +24,13 @@ public class Model {
     private void generateDummyUsers() {
         persons.add(new Owner("Owner", "Password"));
         persons.add(new Hirer("Hirer", "Password"));
+        persons.add(new Owner("Hans", "Password"));
+        persons.add(new Hirer("Chef", "Password"));
+        persons.add(new Owner("Jochem", "Password"));
+        persons.add(new Hirer("Brend", "Password"));
     }
 
-    private void generateDummyRooms(){
+    private void generateDummyRooms() {
         rooms.add(new Room(100, 220, "Ootmarsum", "Owner"));
         rooms.add(new Room(150, 280, "Ootmarsum", "Owner"));
         rooms.add(new Room(170, 300, "Ootmarsum", "Owner"));
@@ -60,23 +64,23 @@ public class Model {
         }
     }
 
-    public Person getPerson(String username){
-        for(int i = 0; i < persons.size(); i++){
-            if(persons.get(i).getUsername().equals(username)){
+    public Person getPerson(String username) {
+        for (int i = 0; i < persons.size(); i++) {
+            if (persons.get(i).getUsername().equals(username)) {
                 return persons.get(i);
             }
         }
         return null;
     }
 
-    public void addRoom(int squareMeters, int rentPrice, String location, String owner){
+    public void addRoom(int squareMeters, int rentPrice, String location, String owner) {
         rooms.add(new Room(squareMeters, rentPrice, location, owner));
     }
 
-    public ArrayList<Room> getSpecificRooms(String owner){
-        ArrayList<Room>specificRooms = new ArrayList<>();
-        for (int i = 0; i <rooms.size() ; i++) {
-            if (rooms.get(i).getOwner().equals(owner)){
+    public ArrayList<Room> getSpecificRooms(String owner) {
+        ArrayList<Room> specificRooms = new ArrayList<>();
+        for (int i = 0; i < rooms.size(); i++) {
+            if (rooms.get(i).getOwner().equals(owner)) {
                 specificRooms.add(rooms.get(i));
             }
         }
