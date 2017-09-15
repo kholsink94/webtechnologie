@@ -19,9 +19,10 @@ public class loginServlet extends HttpServlet {
     private String tempUsername, tempPassword;
     private Model model = Model.getInstance();
     private ArrayList<Room> specificRooms;
+    HttpSession session;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        session = request.getSession();
 
         tempUsername = request.getParameter("username");
         tempPassword = request.getParameter("password");
@@ -31,7 +32,11 @@ public class loginServlet extends HttpServlet {
             if (model.isHirer(tempUsername)) {
                 Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
-                    currentUser = new Owner(tempUsername, tempPassword);
+                    currentUser = new Hirer(tempUsername, tempPassword);
+                    session.setAttribute("person", currentUser);
+                } else {
+                    session.removeAttribute("person");
+                    currentUser = new Hirer(tempUsername, tempPassword);
                     session.setAttribute("person", currentUser);
                 }
                 RequestDispatcher dispatch = request.getRequestDispatcher("WEB-INF/hirer.html");
@@ -39,7 +44,11 @@ public class loginServlet extends HttpServlet {
             } else if (!model.isHirer(tempUsername)) {
                 Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
-                    currentUser = new Hirer(tempUsername, tempPassword);
+                    currentUser = new Owner(tempUsername, tempPassword);
+                    session.setAttribute("person", currentUser);
+                } else {
+                    session.removeAttribute("person");
+                    currentUser = new Owner(tempUsername, tempPassword);
                     session.setAttribute("person", currentUser);
                 }
                 specificRooms = model.getSpecificRooms(tempUsername);
