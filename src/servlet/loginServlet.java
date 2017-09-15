@@ -1,5 +1,6 @@
 package servlet;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import model.*;
 
 import javax.servlet.RequestDispatcher;
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 public class loginServlet extends HttpServlet {
 
     private String tempUsername, tempPassword;
-    private Model model = Model.getInstance();
+    private Model model;
     private ArrayList<Room> specificRooms;
-    HttpSession session;
+    private HttpSession session;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         session = request.getSession();
@@ -27,8 +28,10 @@ public class loginServlet extends HttpServlet {
         tempUsername = request.getParameter("username");
         tempPassword = request.getParameter("password");
 
+        model = (Model) getServletContext().getAttribute(Model.class.getName());
 
         if (ValidateLogin(tempUsername, tempPassword)) {
+
             if (model.isHirer(tempUsername)) {
                 Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
