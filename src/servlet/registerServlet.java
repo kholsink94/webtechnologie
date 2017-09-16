@@ -16,31 +16,32 @@ public class registerServlet extends HttpServlet {
     private Model model = Model.getInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
 
-        System.out.println(username);
-        System.out.println(password);
-        System.out.println(role);
-
         PrintWriter writer = response.getWriter();
-        String htmlRespone = "<html>";
 
-        if(!model.doesPersonExist(username)){
-            model.addPerson(username, password, role);
-            System.out.println("Person: " + username +  " has been added!, His password is : " + password + " and his role is: " + role);
-            response.sendRedirect("login.html");
-        } else{
-            htmlRespone += "This username did already exist." + "<br/>";
-            htmlRespone += "<a href='register'>try again.</a>";
+        if (username.length() == 0) {
+            writer.println("Username is invalid!");
+        } else if (password.length() == 0) {
+            writer.println("Password is invalid!");
+        } else if (role.isEmpty()) {
+            writer.println("Role is invalid!");
         }
 
-        htmlRespone += "</html>";
-        writer.println(htmlRespone);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        if (!model.doesPersonExist(username)) {
+            model.addPerson(username, password, role);
+            System.out.println("Person: " + username + " has been added!, His password is : " + password + " and his role is: " + role);
+            response.sendRedirect("login.html");
+        } else {
+            String htmlRespone = "<html>";
+            htmlRespone += "Person already exists!";
+            htmlRespone += "</html>";
+            writer.println(htmlRespone);
+        }
     }
 }

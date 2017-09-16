@@ -18,7 +18,6 @@ public class showPersonServlet extends HttpServlet {
 
     private Model model = Model.getInstance();
 
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
         String htmlRespone = "<html>";
@@ -31,8 +30,8 @@ public class showPersonServlet extends HttpServlet {
 
         htmlRespone += "<br/>";
 
-        for (int i = 0; i <model.getPersons().size() ; i++) {
-            if (model.getPersons().get(i) instanceof Owner){
+        for (int i = 0; i < model.getPersons().size(); i++) {
+            if (model.getPersons().get(i) instanceof Owner) {
                 htmlRespone += "Owner: " + model.getPersons().get(i).getUsername() + "<br/>";
             }
         }

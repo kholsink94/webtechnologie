@@ -6,13 +6,13 @@ import model.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 @WebServlet("/loginServlet")
 public class loginServlet extends HttpServlet {
@@ -21,14 +21,30 @@ public class loginServlet extends HttpServlet {
     private Model model;
     private ArrayList<Room> specificRooms;
     private HttpSession session;
+    private int number;
+    public static final String dateFormat = "yyyy-MM-dd";
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        session = request.getSession();
-
         tempUsername = request.getParameter("username");
         tempPassword = request.getParameter("password");
 
+        session = request.getSession();
+
         model = (Model) getServletContext().getAttribute(Model.class.getName());
+
+        // Maakt cookie voor 1 week.
+        // Met URLencoder omdat er anders gezeur komt dat er ontoegestaande tekens inzitten.
+        Cookie timesVisited = new Cookie("timesVisited", URLEncoder.encode(Integer.toString(number), "UTF-8"));
+        timesVisited.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(timesVisited);
+        number++;
+
+        Cookie lastVisited = new Cookie("lastVisited", URLEncoder.encode(getCurrentDate(), "UTF-8"));
+        lastVisited.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(lastVisited);
+
+        System.out.println(lastVisited.toString());
 
         if (ValidateLogin(tempUsername, tempPassword)) {
 
@@ -93,7 +109,10 @@ public class loginServlet extends HttpServlet {
         return false;
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    private static String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dataFormat = new SimpleDateFormat(dateFormat);
+        return dataFormat.format(calendar.getTime());
     }
+
 }
