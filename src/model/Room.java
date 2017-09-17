@@ -2,11 +2,18 @@ package model;
 
 public class Room {
 
+    /*
+    Attributes for square meters, rent price, location and the owner.
+     */
     private int squareMeters;
     private int rentPrice;
     private String location;
     private String owner;
 
+    /*
+    Constructor for the room.
+    Asserts for square meters, rent price, location and the owner.
+     */
     public Room(int squareMeters, int rentPrice, String location, String owner) {
 
         assert squareMeters > 0 : "Negative square meters";
@@ -24,6 +31,9 @@ public class Room {
         this.owner = owner;
     }
 
+    /*
+    Getters.
+     */
     public int getSquareMeters() {
         return squareMeters;
     }

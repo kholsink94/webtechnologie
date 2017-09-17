@@ -1,6 +1,6 @@
 package servlet;
 
-import model.Model;
+import model.DataProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +13,22 @@ import java.io.PrintWriter;
 @WebServlet("/registerServlet")
 public class registerServlet extends HttpServlet {
 
-    private Model model = Model.getInstance();
+    /*
+    Attribute to save our dataProvider.
+     */
+    private DataProvider dataProvider = DataProvider.getInstance();
 
+    /*
+    doPost method, we have no post actions in our register html.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 
+    /*
+    doGet method, we save the username and password and the role (radiobutton).
+    Checking if the username, password and role fields are valid.
+    Adding the person to our dataProvider.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -33,8 +44,8 @@ public class registerServlet extends HttpServlet {
             writer.println("Role is invalid!");
         }
 
-        if (!model.doesPersonExist(username)) {
-            model.addPerson(username, password, role);
+        if (!dataProvider.doesPersonExist(username)) {
+            dataProvider.addPerson(username, password, role);
             System.out.println("Person: " + username + " has been added!, His password is : " + password + " and his role is: " + role);
             response.sendRedirect("login.html");
         } else {

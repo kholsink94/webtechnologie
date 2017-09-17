@@ -1,6 +1,6 @@
 package servlet;
 
-import model.Model;
+import model.DataProvider;
 import model.Room;
 
 import javax.servlet.ServletException;
@@ -13,26 +13,27 @@ import java.util.ArrayList;
 @WebServlet("/searchRoomServlet")
 public class searchRoomServlet extends HttpServlet {
 
-    private Model model = Model.getInstance();
+    /*
+    Attribute for the dataProvider and arraylist for specific rooms.
+     */
+    private DataProvider dataProvider = DataProvider.getInstance();
     private ArrayList<Room> specificRooms = new ArrayList<>();
 
+    /*
+    doPost method;
+    Saving the square meters, rent price and location.
+    Generating html response to print all the specific rooms with the minimum square meters, maximum rent price and the location.
+    Also, we are printing the cookies here, we do this by requesting the cookies with the request.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int squareMeters = Integer.parseInt(request.getParameter("squareMeters"));
         int rentPrice = Integer.parseInt(request.getParameter("rentPrice"));
         String location = request.getParameter("location");
 
-        if (squareMeters < 0) {
-            System.out.println("Unrealistic square meters!");
-        } else if (rentPrice < 0) {
-            System.out.println("Unrealistic rent price!");
-        } else if (location.isEmpty() || location == null) {
-            System.out.println("Empty/invalid location!");
-        }
-
         PrintWriter writer = response.getWriter();
         String htmlResponse = "<html>";
 
-        specificRooms = model.getSpecificRooms(squareMeters, rentPrice, location);
+        specificRooms = dataProvider.getSpecificRooms(squareMeters, rentPrice, location);
         htmlResponse += "We found " + specificRooms.size() + " room(s) with the following requirements: " + "<br/>" + "<br/>";
         htmlResponse += "At least " + squareMeters + " square meters" + "<br/>";
         htmlResponse += "Below " + rentPrice + " euro" + "<br/>";
@@ -56,9 +57,11 @@ public class searchRoomServlet extends HttpServlet {
                 }
                 if (timesVisited.equals(currentCookie.getName())) {
                     if (Integer.parseInt(currentCookie.getValue()) == 0) {
-                        message = message + "Hell yeah boi, u are the first visitor!" + "<br/>";
+                        message = message + "<br/>";
+                        message = message + "You are the first visitor!" + "<br/>";
                         currentCookie.setValue(currentCookie.getValue() + 1);
                     } else {
+                        message = message + "<br/>";
                         message = message + "The page has been visited; " + currentCookie.getValue() + " time(s) " + "<br/>";
                         currentCookie.setValue(currentCookie.getValue() + 1);
                     }

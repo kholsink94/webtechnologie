@@ -1,6 +1,5 @@
 package servlet;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import model.*;
 
 import javax.servlet.RequestDispatcher;
@@ -17,24 +16,33 @@ import java.util.Calendar;
 @WebServlet("/loginServlet")
 public class loginServlet extends HttpServlet {
 
+    /*
+    Attributes to save a username and password, initialise our dataProvider, arraylist for the rooms, to make a session for the user and a number and dateformat for our cookie.
+     */
     private String tempUsername, tempPassword;
-    private Model model;
+    private DataProvider dataProvider;
     private ArrayList<Room> specificRooms;
     private HttpSession session;
     private int number;
     public static final String dateFormat = "yyyy-MM-dd";
 
-
+    /*
+    In the doPost method:
+    Saving a username and password by requesting the parameter.
+    Getting a session from the request.
+    Initialising the dataProvider from the ServletContext
+    Generating cookies for the times visited and last visited.
+    Checking if a login is validate or not, then we initialise the person in the dataProvider and session.
+    We redirect them to either the hirer page or the (by servlet generated) owner page, or to the failed login page.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         tempUsername = request.getParameter("username");
         tempPassword = request.getParameter("password");
 
         session = request.getSession();
 
-        model = (Model) getServletContext().getAttribute(Model.class.getName());
+        dataProvider = (DataProvider) getServletContext().getAttribute(DataProvider.class.getName());
 
-        // Maakt cookie voor 1 week.
-        // Met URLencoder omdat er anders gezeur komt dat er ontoegestaande tekens inzitten.
         Cookie timesVisited = new Cookie("timesVisited", URLEncoder.encode(Integer.toString(number), "UTF-8"));
         timesVisited.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(timesVisited);
@@ -48,7 +56,7 @@ public class loginServlet extends HttpServlet {
 
         if (ValidateLogin(tempUsername, tempPassword)) {
 
-            if (model.isHirer(tempUsername)) {
+            if (dataProvider.isHirer(tempUsername)) {
                 Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
                     currentUser = new Hirer(tempUsername, tempPassword);
@@ -60,7 +68,7 @@ public class loginServlet extends HttpServlet {
                 }
                 RequestDispatcher dispatch = request.getRequestDispatcher("WEB-INF/hirer.html");
                 dispatch.forward(request, response);
-            } else if (!model.isHirer(tempUsername)) {
+            } else if (!dataProvider.isHirer(tempUsername)) {
                 Person currentUser = (Person) session.getAttribute("person");
                 if (currentUser == null) {
                     currentUser = new Owner(tempUsername, tempPassword);
@@ -70,7 +78,7 @@ public class loginServlet extends HttpServlet {
                     currentUser = new Owner(tempUsername, tempPassword);
                     session.setAttribute("person", currentUser);
                 }
-                specificRooms = model.getSpecificRooms(tempUsername);
+                specificRooms = dataProvider.getSpecificRooms(tempUsername);
                 printOwnerDetails(response.getWriter());
             }
         } else {
@@ -78,6 +86,9 @@ public class loginServlet extends HttpServlet {
         }
     }
 
+    /*
+    Generates a whole page for the owner. We are printing all the rooms of the owner.
+     */
     private void printOwnerDetails(PrintWriter writer) {
         writer.println("<head>\n" +
                 "    <h2>Succesfully logged in as, owner!</h2>\n" +
@@ -98,7 +109,7 @@ public class loginServlet extends HttpServlet {
     }
 
     private boolean ValidateLogin(String username, String password) {
-        ArrayList<Person> users = model.getPersons();
+        ArrayList<Person> users = dataProvider.getPersons();
 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {

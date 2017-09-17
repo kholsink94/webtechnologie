@@ -2,25 +2,37 @@ package model;
 
 import java.util.ArrayList;
 
-public class Model {
-    private static Model ourInstance;
+public class DataProvider {
+    /*
+    Attributes for the model instance, Arraylists for persons and rooms.
+     */
+    private static DataProvider ourInstance;
     public ArrayList<Person> persons;
     public ArrayList<Room> rooms;
 
-    public static Model getInstance() {
+    /*
+    Get method to get a instance of our DataProvider.
+     */
+    public static DataProvider getInstance() {
         if (ourInstance == null) {
-            ourInstance = new Model();
+            ourInstance = new DataProvider();
         }
         return ourInstance;
     }
 
-    private Model() {
+    /*
+    DataProvider constructor where we initialise persons and rooms.
+     */
+    private DataProvider() {
         persons = new ArrayList<>();
         rooms = new ArrayList<>();
         generateDummyUsers();
         generateDummyRooms();
     }
 
+    /*
+    Creating dummy data for the users and rooms
+     */
     private void generateDummyUsers() {
         persons.add(new Owner("Owner", "Password"));
         persons.add(new Hirer("Hirer", "Password"));
@@ -41,7 +53,12 @@ public class Model {
         rooms.add(new Room(32, 550, "Ootmarsum", "Niet"));
     }
 
+    /*
+    Method to check if someone is a hirer (if not, he is a owner)
+     */
     public boolean isHirer(String username) {
+        assert username != null : "Null username";
+        assert !username.isEmpty() : "Empty username";
         for (Person p : persons) {
             if (p.getUsername().equals(username)) {
                 if (p instanceof Hirer) {
@@ -52,11 +69,25 @@ public class Model {
         return false;
     }
 
+    /*
+    Getter for the person arraylists.
+     */
     public ArrayList<Person> getPersons() {
         return persons;
     }
 
+    /*
+    Method to add person with a username, password and a role.
+     */
     public void addPerson(String username, String password, String role) {
+
+        assert !username.isEmpty() : "empty username";
+        assert username != null : "null username";
+        assert !password.isEmpty() : "empty password";
+        assert password != null : "null password";
+        assert !role.isEmpty() : "empty role";
+        assert role != null : "null role";
+
         if (role.equals("Owner")) {
             persons.add(new Owner(username, password));
         } else {
@@ -64,20 +95,31 @@ public class Model {
         }
     }
 
-    public Person getPerson(String username) {
-        for (int i = 0; i < persons.size(); i++) {
-            if (persons.get(i).getUsername().equals(username)) {
-                return persons.get(i);
-            }
-        }
-        return null;
-    }
-
+    /*
+    Method to add a room with square meters, rent price, location and the owner.
+     */
     public void addRoom(int squareMeters, int rentPrice, String location, String owner) {
+
+        assert squareMeters > 0 : "Negative square meters";
+        assert rentPrice > 0 : "Negative rent price";
+        assert squareMeters < 500 : "Unrealistic square meters";
+        assert rentPrice < 2000 : "Unrealistic rent price";
+        assert !location.isEmpty() : "Empty location";
+        assert location != null : "Null location";
+        assert !owner.isEmpty() : "Emtpy owner";
+        assert owner != null : "Null owner";
+
         rooms.add(new Room(squareMeters, rentPrice, location, owner));
     }
 
+    /*
+    Method to get all the rooms from a specific owner.
+     */
     public ArrayList<Room> getSpecificRooms(String owner) {
+
+        assert !owner.isEmpty() : "Empty owner";
+        assert owner != null : "Null owner";
+
         ArrayList<Room> specificRooms = new ArrayList<>();
         for (int i = 0; i < rooms.size(); i++) {
             if (rooms.get(i).getOwner().equals(owner)) {
@@ -87,7 +129,13 @@ public class Model {
         return specificRooms;
     }
 
+    /*
+    Method to check if a specific user exists.
+     */
     public boolean doesPersonExist(String username) {
+        assert !username.isEmpty() : "Empty username";
+        assert username != null : "Null username";
+
         for (int i = 0; i < persons.size(); i++) {
             if (persons.get(i).getUsername().equals(username)) {
                 return true;
@@ -96,7 +144,14 @@ public class Model {
         return false;
     }
 
+    /*
+    Method to get specific rooms with a minimum square meters, maximum rent price and a location.
+     */
     public ArrayList<Room> getSpecificRooms(int squareMeters, int rentPrice, String location) {
+        assert squareMeters > 0 : "Negative square meters";
+        assert rentPrice > 0 : "Negative rent price";
+        assert !location.isEmpty() : "Empty location";
+        assert location != null : "Null location";
         ArrayList<Room> specificRooms = new ArrayList<>();
         for (int i = 0; i < rooms.size(); i++) {
             if (rooms.get(i).getSquareMeters() >= squareMeters && rooms.get(i).getRentPrice() <= rentPrice && rooms.get(i).getLocation().equals(location)) {

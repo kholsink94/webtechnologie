@@ -1,15 +1,11 @@
 package listener;
 
-import model.Model;
+import model.DataProvider;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
 
 @WebListener()
 public class ContextListener implements ServletContextListener
@@ -28,8 +24,8 @@ public class ContextListener implements ServletContextListener
          You can initialize servlet context related data here.
       */
         ServletContext context = sce.getServletContext();
-        Model model = Model.getInstance();
-        context.setAttribute(model.getClass().getName(), model);
+        DataProvider dataProvider = DataProvider.getInstance();
+        context.setAttribute(dataProvider.getClass().getName(), dataProvider);
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
