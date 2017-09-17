@@ -82,7 +82,8 @@ public class loginServlet extends HttpServlet {
                 printOwnerDetails(response.getWriter());
             }
         } else {
-            response.sendRedirect("WEB-INF/failedlogin.html");
+            RequestDispatcher dispatch = request.getRequestDispatcher("WEB-INF/failedlogin.html");
+            dispatch.forward(request, response);
         }
     }
 
